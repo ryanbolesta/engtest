@@ -10,9 +10,9 @@ Provide a simple web page that allows a user to page through a collection of act
 * Users per page 5
 * Dynamic paging controls (i.e. if no previous page is available, no previous link is presented)
 * Clicking username presents a full view of the user's details
-* * Details must be retrieved from API in a separate call getting the individual user record
+  * Details must be retrieved from API in a separate call getting the individual user record
 
-*Hint*: How much work can the API do for you?
+**Hint**: How much work can the API do for you?
 
 ## API Integration Details
 

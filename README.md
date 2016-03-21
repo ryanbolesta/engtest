@@ -8,9 +8,11 @@ Provide a simple web page that allows a user to page through a collection of act
 * Technology choice is whatever platform you're comfortable in
 * No styling necessary, seriously!
 * Users per page 5
+* Select 3-4 fields from the user's details to display per page
 * Dynamic paging controls (i.e. if no previous page is available, no previous link is presented)
-* Clicking username presents a full view of the user's details
+* Clicking username presents a single view of the user's details
   * Details must be retrieved from API in a separate call getting the individual user record
+  * Select a few more data elements, presenting all elements is not necessary
 
 **Hint**: How much work can the API do for you?
 

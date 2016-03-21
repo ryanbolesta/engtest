@@ -2,15 +2,17 @@
 
 ## Goal
 
-Provide a simple web page that lists pages of active users in table form.
+Provide a simple web page that allows a user to page through a collection of active user records.
 
 ### Assumptions
 * Technology choice is whatever platform you're comfortable in
-* No styling necessary
+* No styling necessary, seriously!
 * Users per page 5
 * Dynamic paging controls (i.e. if no previous page is available, no previous link is presented)
 * Clicking username presents a full view of the user's details
-** Details must be retrieved from API in a separate call getting the individual user record
+* * Details must be retrieved from API in a separate call getting the individual user record
+
+*Hint*: How much work can the API do for you?
 
 ## API Integration Details
 

@@ -10,7 +10,7 @@ Provide a simple web page that allows a user to page through a collection of act
 * Users per page 5
 * Select 3-4 fields from the user's details to display per page
 * Dynamic paging controls (i.e. if no previous page is available, no previous link is presented)
-* Clicking username presents a single view of the user's details
+* NTH: Clicking username presents a single view of the user's details
   * Details must be retrieved from API in a separate call getting the individual user record
   * Select a few more data elements, presenting all elements is not necessary
 

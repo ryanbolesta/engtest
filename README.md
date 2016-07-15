@@ -1,4 +1,4 @@
-# Jr. Software Engineering API Integration Test
+# Software Engineering API Integration Test
 
 ## Goal
 

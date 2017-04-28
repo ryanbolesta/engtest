@@ -16,6 +16,8 @@ Provide a simple web page that allows a user to page through a collection of act
 
 ## API Integration Details
 
+_Warning_: The following endpoints will present self-signed SSL certificates, you'll need to either disable SSL validation all together or download and import the certificate into your trusted store.
+
 Authentication is achieved through an oauth2 bearer token, obtained through a client_credentials grant utilizing the credentials issued to you from FitPay:
 
 ```

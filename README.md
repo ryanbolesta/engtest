@@ -11,6 +11,7 @@ Provide a simple web page that allows a user to page through a collection of act
 * Select 3-4 fields from the user's details to display per page
 * Dynamic paging controls (i.e. if no previous page is available, no previous link is presented)
 * Scalable in terms of not holding the entire user collection in memory, let the API do the work for you.
+* API credentials and/or bearer tokens can be hard coded with values obtained out-of-band
 * You're familiar with [curl](https://curl.haxx.se) for testing Restful APIs
 
 **Hint**: How much work can the API do for you?

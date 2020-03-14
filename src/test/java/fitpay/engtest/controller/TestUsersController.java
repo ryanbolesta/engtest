@@ -30,11 +30,8 @@ public class TestUsersController {
     @Test
     public void shouldReturnDefaultMessage() throws Exception {
         this.mockMvc.perform(get("/compositeUsers"))
-                    .andDo(print()).andExpect(status().isOk())
-                    .andExpect(content().string(containsString("Placeholder for getCompositeUsers")));
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Placeholder for getCompositeUsers")));
     }
-
-
-
 
 }

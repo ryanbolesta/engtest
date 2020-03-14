@@ -1,37 +1,36 @@
 package fitpay.engtest.controller;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import fitpay.engtest.service.FitPayAPIService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(MockitoJUnitRunner.class)
-public class TestUsersController {
+@AutoConfigureWebClient
+@WebMvcTest(UsersController.class)
+class TestUsersController {
 
+    @Autowired
     private MockMvc mockMvc;
 
-    @InjectMocks
-    private UsersController usersController;
-
-    @Before
-    public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(usersController).build();
-    }
+    @MockBean
+    private FitPayAPIService fitpayAPIService;
 
     @Test
-    public void shouldReturnDefaultMessage() throws Exception {
-        this.mockMvc.perform(get("/compositeUsers"))
+    void shouldReturnDefaultMessage() throws Exception {
+        when(fitpayAPIService.getUser("123")).thenReturn("User 123 Data");
+        this.mockMvc.perform(get("/compositeUsers/123"))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("Placeholder for getCompositeUsers")));
+                .andExpect(content().string(containsString("User 123 Data")));
     }
 
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.concurrent.ExecutionException;
+
 @RestController
 public class UsersController {
 
@@ -27,6 +29,12 @@ public class UsersController {
             return ResponseEntity.ok(usersService.getCompositeUser(userId, deviceState, creditCardState));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Unable to process JSON response to return Composite User", e);
+        } catch (InterruptedException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Unable to process JSON response to return Composite User", e);
+        } catch (ExecutionException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Unable to process JSON response to return Composite User", e);
         }

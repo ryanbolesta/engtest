@@ -10,6 +10,7 @@ import fitpay.engtest.model.Device;
 import fitpay.engtest.model.UserAsset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,6 +18,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +40,7 @@ public class UsersService {
      * @throws JsonProcessingException
      */
     public CompositeUser getCompositeUser(String userId, String deviceState, String creditCardState)
-            throws JsonProcessingException {
+            throws JsonProcessingException, ExecutionException, InterruptedException {
 
         ResponseEntity<String> usersResponse = getUser(userId);
         CompositeUser compositeUser = new CompositeUser();
@@ -45,13 +48,10 @@ public class UsersService {
         if (usersResponse.getStatusCode().is2xxSuccessful()) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode links = mapper.readTree(Objects.requireNonNull(usersResponse.getBody())).path("_links");
-
-            String devicesLink = links.path(fitPayAPIProperties.getDevicesLink()).path("href").asText();
-            compositeUser.setDevices(getUserAssetList(Device[].class, devicesLink, deviceState));
-
-            String cardsLink = links.path(fitPayAPIProperties.getCardsLink()).path("href").asText();
-            compositeUser.setCreditCards(getUserAssetList(CreditCard[].class, cardsLink, creditCardState));
-
+            CompletableFuture<List<Device>> deviceListFuture = getUserAssetList(Device[].class, links, fitPayAPIProperties.getDevicesLink(), deviceState);
+            CompletableFuture<List<CreditCard>> cardListFuture = getUserAssetList(CreditCard[].class, links, fitPayAPIProperties.getCardsLink(), creditCardState);
+            compositeUser.setDevices(deviceListFuture.get());
+            compositeUser.setCreditCards(cardListFuture.get());
             compositeUser.setUserId(userId);
             return compositeUser;
         }
@@ -62,11 +62,11 @@ public class UsersService {
      * Makes API call to retrieve a list of assets of a user (devices, credit cards)
      * Precondition is that the API call has an attribute in the response named "results" which holds a list of assets
      * @param c - Class array that extends UserAsset
-     * @param url - API url to retrieve list of assets
      * @return List of user assets
      * @throws JsonProcessingException
      */
-    private <T extends UserAsset> List<T> getUserAssetList(Class<T[]> c, String url, String stateFilter) throws JsonProcessingException {
+    private <T extends UserAsset> CompletableFuture<List<T>> getUserAssetList(Class<T[]> c, JsonNode links, String linkKey, String stateFilter) throws JsonProcessingException {
+        String url = links.path(linkKey).path("href").asText();
         ResponseEntity<String> response = getAPIResponse(url);
         ObjectMapper mapper = new ObjectMapper();
         List<T> assetList = null;
@@ -75,7 +75,7 @@ public class UsersService {
             assetList = Arrays.asList(mapper.readValue(results, c));
             assetList = filterUserAssetList(assetList, stateFilter);
         }
-        return assetList;
+        return CompletableFuture.completedFuture(assetList);
     }
 
     /**

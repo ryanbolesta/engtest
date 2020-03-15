@@ -27,10 +27,10 @@ class TestUsersController {
     private UsersService usersService;
 
     @Test
-    void shouldReturnDefaultMessage() throws Exception {
+    void shouldReturnUserWithNullAssets() throws Exception {
         CompositeUser user = new CompositeUser();
         user.setUserId("123");
-        when(usersService.getCompositeUser("123")).thenReturn(user);
+        when(usersService.getCompositeUser("123", null, null)).thenReturn(user);
         this.mockMvc.perform(get("/compositeUsers/123"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(content().json("{\"userId\":\"123\",\"devices\":null,\"creditCards\": null}"));

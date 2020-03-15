@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class UsersService {
@@ -35,7 +36,8 @@ public class UsersService {
      * @return CompositeUser object with a userId, list of devices, and list of credit cards
      * @throws JsonProcessingException
      */
-    public CompositeUser getCompositeUser(String userId) throws JsonProcessingException {
+    public CompositeUser getCompositeUser(String userId, String deviceState, String creditCardState)
+            throws JsonProcessingException {
 
         ResponseEntity<String> usersResponse = getUser(userId);
         CompositeUser compositeUser = new CompositeUser();
@@ -45,10 +47,10 @@ public class UsersService {
             JsonNode links = mapper.readTree(Objects.requireNonNull(usersResponse.getBody())).path("_links");
 
             String devicesLink = links.path(fitPayAPIProperties.getDevicesLink()).path("href").asText();
-            compositeUser.setDevices(getUserAssetList(Device[].class, devicesLink));
+            compositeUser.setDevices(getUserAssetList(Device[].class, devicesLink, deviceState));
 
             String cardsLink = links.path(fitPayAPIProperties.getCardsLink()).path("href").asText();
-            compositeUser.setCreditCards(getUserAssetList(CreditCard[].class, cardsLink));
+            compositeUser.setCreditCards(getUserAssetList(CreditCard[].class, cardsLink, creditCardState));
 
             compositeUser.setUserId(userId);
             return compositeUser;
@@ -64,14 +66,20 @@ public class UsersService {
      * @return List of user assets
      * @throws JsonProcessingException
      */
-    private <T extends UserAsset> List<T> getUserAssetList(Class<T[]> c, String url) throws JsonProcessingException {
+    private <T extends UserAsset> List<T> getUserAssetList(Class<T[]> c, String url, String stateFilter) throws JsonProcessingException {
         ResponseEntity<String> response = getAPIResponse(url);
         ObjectMapper mapper = new ObjectMapper();
+        List<T> assetList = null;
         if (response.getStatusCode().is2xxSuccessful()) {
             String results = mapper.readTree(Objects.requireNonNull(response.getBody())).get("results").toString();
-            return Arrays.asList(mapper.readValue(results, c));
+            assetList = Arrays.asList(mapper.readValue(results, c));
+            if (null != stateFilter) {
+                assetList = assetList.stream()
+                                    .filter(userAsset -> stateFilter.equals(userAsset.getState()))
+                                    .collect(Collectors.toList());
+            }
         }
-        return null;
+        return assetList;
     }
 
     /**

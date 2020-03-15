@@ -73,11 +73,22 @@ public class UsersService {
         if (response.getStatusCode().is2xxSuccessful()) {
             String results = mapper.readTree(Objects.requireNonNull(response.getBody())).get("results").toString();
             assetList = Arrays.asList(mapper.readValue(results, c));
-            if (null != stateFilter) {
-                assetList = assetList.stream()
-                                    .filter(userAsset -> stateFilter.equals(userAsset.getState()))
-                                    .collect(Collectors.toList());
-            }
+            assetList = filterUserAssetList(assetList, stateFilter);
+        }
+        return assetList;
+    }
+
+    /**
+     * Filters the passed in list to only include items with the given state
+     * @param assetList - List of objects of the type of a class that extends UserAsset
+     * @param stateFilter - filter specifies to only include objects in the list that match this state
+     * @return - filtered list of assets
+     */
+    private <T extends UserAsset> List<T> filterUserAssetList(List<T> assetList, String stateFilter) {
+        if (null != stateFilter) {
+            assetList = assetList.stream()
+                    .filter(userAsset -> stateFilter.equals(userAsset.getState()))
+                    .collect(Collectors.toList());
         }
         return assetList;
     }

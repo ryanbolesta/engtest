@@ -26,11 +26,19 @@ public class FitPayAPIProperties {
     @NotBlank
     private final String accessToken;
 
-    public FitPayAPIProperties(@NotBlank String clientId, @NotBlank String secret, @NotBlank String baseUrl, @NotBlank String accessToken) {
+    @NotBlank
+    private final String devicesLink;
+
+    @NotBlank
+    private final String cardsLink;
+
+    public FitPayAPIProperties(@NotBlank String clientId, @NotBlank String secret, @NotBlank String baseUrl, @NotBlank String accessToken, @NotBlank String devicesLink, @NotBlank String cardsLink) {
         this.clientId = clientId;
         this.secret = secret;
         this.baseUrl = baseUrl;
         this.accessToken = accessToken;
+        this.devicesLink = devicesLink;
+        this.cardsLink = cardsLink;
     }
 
     public String getClientId() {
@@ -47,5 +55,13 @@ public class FitPayAPIProperties {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public String getDevicesLink() {
+        return devicesLink;
+    }
+
+    public String getCardsLink() {
+        return cardsLink;
     }
 }

@@ -1,6 +1,7 @@
 package fitpay.engtest.controller;
 
-import fitpay.engtest.service.FitPayAPIService;
+import fitpay.engtest.model.CompositeUser;
+import fitpay.engtest.service.UsersService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
@@ -23,14 +24,16 @@ class TestUsersController {
     private MockMvc mockMvc;
 
     @MockBean
-    private FitPayAPIService fitpayAPIService;
+    private UsersService usersService;
 
     @Test
     void shouldReturnDefaultMessage() throws Exception {
-        when(fitpayAPIService.getUser("123")).thenReturn("User 123 Data");
+        CompositeUser user = new CompositeUser();
+        user.setUserId("123");
+        when(usersService.getCompositeUser("123")).thenReturn(user);
         this.mockMvc.perform(get("/compositeUsers/123"))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("User 123 Data")));
+                .andExpect(content().json("{\"userId\":\"123\",\"devices\":null,\"creditCards\": null}"));
     }
 
 }

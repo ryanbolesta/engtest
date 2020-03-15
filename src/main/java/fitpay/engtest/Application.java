@@ -18,10 +18,7 @@ public class Application {
     }
 
     @Bean
-    public RestTemplate fitpayRestTemplate(RestTemplateBuilder builder, FitPayAPIProperties properties) {
-        RestTemplate template = builder.build();
-        DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory(properties.getBaseUrl());
-        template.setUriTemplateHandler(uriBuilderFactory);
-        return template;
+    public RestTemplate fitpayRestTemplate(RestTemplateBuilder builder) {
+        return builder.build();
     }
 }

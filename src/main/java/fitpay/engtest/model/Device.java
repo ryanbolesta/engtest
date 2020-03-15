@@ -1,13 +1,8 @@
 package fitpay.engtest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.io.Serializable;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
-public class Device implements Serializable {
+public class Device extends UserAsset {
     private String deviceIdentifier;
-    private String state;
 
     public String getDeviceIdentifier() {
         return deviceIdentifier;
@@ -17,11 +12,4 @@ public class Device implements Serializable {
         this.deviceIdentifier = deviceIdentifier;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
 }

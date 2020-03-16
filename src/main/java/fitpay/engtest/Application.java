@@ -1,6 +1,6 @@
 package fitpay.engtest;
 
-import fitpay.engtest.configuration.FitPayAPIProperties;
+import fitpay.engtest.properties.FitPayAPIProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

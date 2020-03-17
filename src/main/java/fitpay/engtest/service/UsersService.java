@@ -40,7 +40,6 @@ public class UsersService {
         compositeUser.setDevices(deviceListFuture.get());
         compositeUser.setCreditCards(cardListFuture.get());
 
-
         return compositeUser;
     }
 
@@ -61,8 +60,11 @@ public class UsersService {
     }
 
     private <T extends UserAsset> List<T> filterResults(List<T> assetList, String stateFilter) {
-        Predicate<UserAsset> stateEquals = userAsset -> stateFilter.equals(userAsset.getState());
-        return assetList.stream().filter(stateEquals).collect(Collectors.toList());
+        if (null != stateFilter) {
+            Predicate<UserAsset> stateEquals = userAsset -> stateFilter.equals(userAsset.getState());
+            return assetList.stream().filter(stateEquals).collect(Collectors.toList());
+        }
+        return assetList;
     }
 
 }

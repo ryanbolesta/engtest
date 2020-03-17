@@ -1,6 +1,7 @@
 package fitpay.engtest;
 
 import fitpay.engtest.properties.FitPayAPIProperties;
+import fitpay.engtest.service.FitPayAPIService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,7 +23,7 @@ public class Application {
     }
 
     @Bean
-    public RestTemplate fitpayRestTemplate(RestTemplateBuilder builder) {
+    public RestTemplate fitPayRestTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
 
@@ -30,4 +31,10 @@ public class Application {
     public Executor asyncExecutor() {
         return new ThreadPoolTaskExecutor();
     }
+
+    @Bean
+    public String fitPayAPIAccessToken(FitPayAPIService fitPayAPIService) throws Exception {
+        return fitPayAPIService.getAccessToken();
+    }
+
 }

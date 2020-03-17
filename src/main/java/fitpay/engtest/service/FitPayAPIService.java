@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fitpay.engtest.model.User;
 import fitpay.engtest.model.UserAsset;
 import fitpay.engtest.properties.FitPayAPIProperties;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,43 @@ import java.util.List;
 public class FitPayAPIService {
     private final String BODY = "body";
     private final String SLASH = "/";
+    private final String COLON = ":";
     private final String RESULTS = "results";
+    private final String ACCESS_TOKEN = "access_token";
 
     @Autowired
     private FitPayAPIProperties fitPayAPIProperties;
 
     @Autowired
-    private RestTemplate fitpayRestTemplate;
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private String fitPayAPIAccessToken;
+
+    public String getAccessToken() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseEntity<String> response = null;
+        String clientId = fitPayAPIProperties.getClientId();
+        String secret = fitPayAPIProperties.getSecret();
+        String credentials = clientId + COLON + secret;
+        String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setBasicAuth(encodedCredentials);
+        String tokenUrl = fitPayAPIProperties.getTokenUrl();
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        response = restTemplate.exchange(tokenUrl, HttpMethod.GET, entity, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful() && null != response.getBody()) {
+            return mapper.readTree(response.getBody()).path(ACCESS_TOKEN).asText();
+        }
+
+        throw new Exception("Unable to retrieve access token from FitPay API");
+
+    }
+
 
     /**
      * Calls fitpay API for the individual user call.
@@ -58,9 +89,9 @@ public class FitPayAPIService {
     private <T> T getAPIResponse(String url, Class<T> responseType) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.setBearerAuth(fitPayAPIProperties.getAccessToken());
+        headers.setBearerAuth(fitPayAPIAccessToken);
         HttpEntity<String> entity = new HttpEntity<>(BODY, headers);
-        ResponseEntity<T> response = fitpayRestTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+        ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
         return response.getBody();
     }
 

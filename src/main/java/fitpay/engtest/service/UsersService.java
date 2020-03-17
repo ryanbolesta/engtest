@@ -1,6 +1,7 @@
 package fitpay.engtest.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fitpay.engtest.exception.FitPayAPIException;
 import fitpay.engtest.model.CompositeUser;
 import fitpay.engtest.model.CreditCard;
 import fitpay.engtest.model.Device;
@@ -29,12 +30,13 @@ public class UsersService {
 
     /**
      * Creates a CompositeUser by utilizing the FitPay API.
+     *
      * @param userId - Unique identifier for a user
      * @return CompositeUser object with a userId, list of devices, and list of credit cards
      * @throws JsonProcessingException
      */
     public CompositeUser getCompositeUser(String userId, String deviceFilter, String creditCardFilter)
-            throws JsonProcessingException, ExecutionException, InterruptedException {
+            throws JsonProcessingException, ExecutionException, InterruptedException, FitPayAPIException {
         CompositeUser compositeUser = new CompositeUser();
         User user = fitPayAPIService.getUser(userId);
         Map<String, Link> links = user.getLinks();
@@ -50,7 +52,8 @@ public class UsersService {
     }
 
     @Async
-    CompletableFuture<List<Device>> getDeviceListFuture(Map<String, Link> linkMap, String deviceFilter) throws JsonProcessingException {
+    CompletableFuture<List<Device>> getDeviceListFuture(Map<String, Link> linkMap, String deviceFilter)
+            throws JsonProcessingException, FitPayAPIException {
         String url = linkMap.get(DEVICES).getHref();
         List<Device> deviceList = fitPayAPIService.getUserAssetList(Device[].class, url);
         deviceList = filterResults(deviceList, deviceFilter);
@@ -58,7 +61,8 @@ public class UsersService {
     }
 
     @Async
-    CompletableFuture<List<CreditCard>> getCreditCardListFuture(Map<String, Link> linkMap, String creditCardFilter) throws JsonProcessingException {
+    CompletableFuture<List<CreditCard>> getCreditCardListFuture(Map<String, Link> linkMap, String creditCardFilter)
+            throws JsonProcessingException, FitPayAPIException {
         String url = linkMap.get(CREDIT_CARDS).getHref();
         List<CreditCard> creditCardList = fitPayAPIService.getUserAssetList(CreditCard[].class, url);
         creditCardList = filterResults(creditCardList, creditCardFilter);

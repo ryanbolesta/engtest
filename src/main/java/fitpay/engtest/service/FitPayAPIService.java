@@ -7,7 +7,11 @@ import fitpay.engtest.model.UserAsset;
 import fitpay.engtest.properties.FitPayAPIProperties;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,8 +37,6 @@ public class FitPayAPIService {
     private String fitPayAPIAccessToken;
 
     public String getAccessToken() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        ResponseEntity<String> response = null;
         String clientId = fitPayAPIProperties.getClientId();
         String secret = fitPayAPIProperties.getSecret();
         String credentials = clientId + COLON + secret;
@@ -46,9 +48,10 @@ public class FitPayAPIService {
         String tokenUrl = fitPayAPIProperties.getTokenUrl();
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        response = restTemplate.exchange(tokenUrl, HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.GET, entity, String.class);
 
         if (response.getStatusCode().is2xxSuccessful() && null != response.getBody()) {
+            ObjectMapper mapper = new ObjectMapper();
             return mapper.readTree(response.getBody()).path(ACCESS_TOKEN).asText();
         }
 
@@ -64,7 +67,7 @@ public class FitPayAPIService {
      */
     User getUser(String userId) {
         String url = fitPayAPIProperties.getBaseUrl().concat(SLASH).concat(userId);
-        return getAPIResponse(url, User.class);
+        return makeGetRequest(url, User.class);
     }
 
     /**
@@ -75,7 +78,7 @@ public class FitPayAPIService {
      * @throws JsonProcessingException
      */
     <T extends UserAsset> List<T> getUserAssetList(Class<T[]> c, String url) throws JsonProcessingException {
-        String responseBody = getAPIResponse(url);
+        String responseBody = makeGetRequest(url);
         ObjectMapper mapper = new ObjectMapper();
         String results = mapper.readTree(responseBody).get(RESULTS).toString();
         return Arrays.asList(mapper.readValue(results, c));
@@ -86,7 +89,7 @@ public class FitPayAPIService {
      * @param url - url of the API endpoint
      * @return - API response in the form of a ResponseEntity
      */
-    private <T> T getAPIResponse(String url, Class<T> responseType) {
+    private <T> T makeGetRequest(String url, Class<T> responseType) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(fitPayAPIAccessToken);
@@ -100,8 +103,8 @@ public class FitPayAPIService {
      * @param url - url to connect to API
      * @return
      */
-    private String getAPIResponse(String url) {
-        return getAPIResponse(url, String.class);
+    private String makeGetRequest(String url) {
+        return makeGetRequest(url, String.class);
     }
 
 }

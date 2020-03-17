@@ -1,12 +1,18 @@
 package fitpay.engtest.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fitpay.engtest.model.*;
+import fitpay.engtest.model.CompositeUser;
+import fitpay.engtest.model.CreditCard;
+import fitpay.engtest.model.Device;
+import fitpay.engtest.model.Link;
+import fitpay.engtest.model.User;
+import fitpay.engtest.model.UserAsset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;

@@ -1,6 +1,5 @@
 package fitpay.engtest.model;
 
-
 public class Device extends UserAsset {
     private String deviceIdentifier;
 

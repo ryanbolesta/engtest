@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.util.Map;
 
+/**
+ * User DTO that represents the response of the FitPay API individual user call
+ */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class User {
 

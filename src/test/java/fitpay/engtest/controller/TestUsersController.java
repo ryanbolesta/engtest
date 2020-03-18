@@ -1,7 +1,7 @@
 package fitpay.engtest.controller;
 
 import fitpay.engtest.model.CompositeUser;
-import fitpay.engtest.service.UsersService;
+import fitpay.engtest.service.CompositeUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
@@ -16,14 +16,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureWebClient
-@WebMvcTest(UsersController.class)
+@WebMvcTest(CompositeUserController.class)
 class TestUsersController {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UsersService usersService;
+    private CompositeUserService usersService;
 
     @Test
     void shouldReturnUserWithNullAssets() throws Exception {

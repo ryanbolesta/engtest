@@ -19,8 +19,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * Service with functions for handling Users, including creating a CompositeUser
+ */
 @Service
-public class UsersService {
+public class CompositeUserService {
 
     private final String DEVICES = "devices";
     private final String CREDIT_CARDS = "creditCards";
@@ -29,11 +32,12 @@ public class UsersService {
     private FitPayAPIService fitPayAPIService;
 
     /**
-     * Creates a CompositeUser by utilizing the FitPay API.
-     *
+     * Creates a CompositeUser by utilizing the FitPay API. First, an individual User is retrieved from the API, which
+     * includes a map of API links to other assets of the user. We use these links to then retrieve a list of
+     * Devices and CreditCards associated with the user. The Devices and CreditCards are retrieved in parallel by
+     * utilizing CompletableFuture.
      * @param userId - Unique identifier for a user
      * @return CompositeUser object with a userId, list of devices, and list of credit cards
-     * @throws JsonProcessingException
      */
     public CompositeUser getCompositeUser(String userId, String deviceFilter, String creditCardFilter)
             throws JsonProcessingException, ExecutionException, InterruptedException, FitPayAPIException {
@@ -51,6 +55,13 @@ public class UsersService {
         return compositeUser;
     }
 
+    /**
+     * Calls FitPay API to retrieve a List of Device for a user. The URL to the API endpoint
+     * is retrieved via the passed in Map
+     * @param linkMap - Map of links retrieved from the FitPay API individual user call
+     * @param deviceFilter - String filter, only include items in the list with a state that matches this value
+     * @return CompletableFuture with a List of Device for the user
+     */
     @Async
     CompletableFuture<List<Device>> getDeviceListFuture(Map<String, Link> linkMap, String deviceFilter)
             throws JsonProcessingException, FitPayAPIException {
@@ -60,6 +71,13 @@ public class UsersService {
         return CompletableFuture.completedFuture(deviceList);
     }
 
+    /**
+     * Calls FitPay API to retrieve list of CreditCards for a user. The URL to the API endpoint
+     * is retrieved via the passed in Map
+     * @param linkMap - Map of links retrieved from the FitPay API individual user call
+     * @param creditCardFilter - String filter, only include items in the list with a state that matches this value
+     * @return CompletableFuture with a List of CreditCard for the user
+     */
     @Async
     CompletableFuture<List<CreditCard>> getCreditCardListFuture(Map<String, Link> linkMap, String creditCardFilter)
             throws JsonProcessingException, FitPayAPIException {
@@ -69,6 +87,12 @@ public class UsersService {
         return CompletableFuture.completedFuture(creditCardList);
     }
 
+    /**
+     * Filters the passed in asset list to only include assets with a state equal to stateFilter
+     * @param assetList - List of a class that extends UserAsset
+     * @param stateFilter - Filter value
+     * @return Filtered list of class that extends UserAsset
+     */
     private <T extends UserAsset> List<T> filterResults(List<T> assetList, String stateFilter) {
         if (null != stateFilter) {
             Predicate<UserAsset> stateEquals = userAsset -> stateFilter.equals(userAsset.getState());

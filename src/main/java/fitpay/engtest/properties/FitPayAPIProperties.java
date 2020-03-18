@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotBlank;
 
 /**
- * Holds properties needed for connecting to the FitPay API.
+ * Holds properties needed for connecting to the FitPay API retrieved from application.properties.
  */
 @ConstructorBinding
 @ConfigurationProperties(prefix="fitpay.api")

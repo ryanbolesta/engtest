@@ -20,6 +20,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Service provides functions for interacting with the FitPay API
+ */
 @Service
 public class FitPayAPIService {
     private final String BODY = "body";
@@ -39,9 +42,9 @@ public class FitPayAPIService {
 
     /**
      * Retrieves a User from the FitPay API individual user endpoint for the given userId
-     * @param userId Unique identifier for a user used as a path parameter to the FitPay API
-     * @return Newly created user object mapped from the API response
-     * @throws FitPayAPIException Will occur if the response status is not in the expected 200 range
+     * @param userId - Unique identifier for a user used as a path parameter to the FitPay API
+     * @return - Newly created user object mapped from the API response
+     * @throws FitPayAPIException - Will occur if the response status is not in the expected 200 range
      */
     User getUser(String userId) throws FitPayAPIException {
         String url = fitPayAPIProperties.getBaseUrl().concat(SLASH).concat(userId);
@@ -51,12 +54,12 @@ public class FitPayAPIService {
     /**
      * Makes API call to retrieve a list of assets of a user (devices, credit cards)
      * Assumed that the API call has an attribute in the response named "results" which holds a list of assets
-     * @param c type of the List of data to be returned, must be a subclass of UserAsset
-     * @param url Absolute URL of the API endpoint
+     * @param c - type of the List of data to be returned, must be a subclass of UserAsset
+     * @param url - Absolute URL of the API endpoint
      * @return List of a subclass of UserAsset
-     * @throws JsonProcessingException Will occur when retrieving an unexpected JSON response likely because the
+     * @throws JsonProcessingException - Will occur when retrieving an unexpected JSON response likely because the
      *                                  "results" attribute is not in the response.
-     * @throws FitPayAPIException Will occur if the response status is not in the expected 200 range
+     * @throws FitPayAPIException - Will occur if the response status is not in the expected 200 range
      */
     <T extends UserAsset> List<T> getUserAssetList(Class<T[]> c, String url) throws JsonProcessingException, FitPayAPIException {
         String responseBody = makeGetRequest(url);
@@ -68,10 +71,10 @@ public class FitPayAPIService {
     /**
      * Makes a get request to the FitPay API to accept a JSON response specified by the Accept header.
      * The access token bean is included in the Bearer Auth header.
-     * @param url Absolute URL of the API endpoint
+     * @param url - Absolute URL of the API endpoint
      * @param responseType Class return type of the response body
      * @return Body of the api response with type of the responseType parameter
-     * @throws FitPayAPIException Will occur if the response status is not in the expected 200 range
+     * @throws FitPayAPIException - Will occur if the response status is not in the expected 200 range
      */
     private <T> T makeGetRequest(String url, Class<T> responseType) throws FitPayAPIException {
         HttpHeaders headers = new HttpHeaders();
@@ -89,7 +92,6 @@ public class FitPayAPIService {
 
     /**
      * Overloaded for default case of a string response
-     *
      * @param url - url to connect to API
      * @return The string response body
      */
@@ -101,8 +103,8 @@ public class FitPayAPIService {
      * Retrieves access token from the FitPay API via the Base64 encoded clientId and secret properties added to
      * the BasicAuth header
      * @return The retrieved string access token
-     * @throws FitPayAPIException Will occur if the response status is not in the expected 200 range
-     * @throws JsonProcessingException Will occur if the JSON response structure is unexpected and cannot be parsed
+     * @throws FitPayAPIException - Will occur if the response status is not in the expected 200 range
+     * @throws JsonProcessingException - Will occur if the JSON response structure is unexpected and cannot be parsed
      */
     public String getAccessToken() throws FitPayAPIException, JsonProcessingException {
         String clientId = fitPayAPIProperties.getClientId();

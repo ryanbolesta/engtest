@@ -22,16 +22,26 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
+    /**
+     * RestTemplate bean for making API requests
+     */
     @Bean
     public RestTemplate fitPayRestTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
 
+    /**
+     * Executor bean for performing asynchronous actions in the application
+     */
     @Bean
     public Executor asyncExecutor() {
         return new ThreadPoolTaskExecutor();
     }
 
+    /**
+     * Bean for the API access token. We retrieve it once on startup.
+     * NOTE: There is not logic here to renew the token when it expires
+     */
     @Bean
     public String fitPayAPIAccessToken(FitPayAPIService fitPayAPIService) throws Exception {
         return fitPayAPIService.getAccessToken();

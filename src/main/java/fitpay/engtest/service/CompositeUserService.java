@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class CompositeUserService {
-
     private final Logger LOGGER = LoggerFactory.getLogger(CompositeUserService.class);
 
     private final String DEVICES = "devices";
@@ -54,7 +53,6 @@ public class CompositeUserService {
         LOGGER.debug("Retrieving devices and credit cards for user with id={}", userId);
         CompletableFuture<List<Device>> deviceListFuture = getDeviceListFuture(links, deviceFilter);
         CompletableFuture<List<CreditCard>> cardListFuture = getCreditCardListFuture(links, creditCardFilter);
-
         compositeUser.setUserId(user.getId());
         compositeUser.setDevices(deviceListFuture.get());
         compositeUser.setCreditCards(cardListFuture.get());

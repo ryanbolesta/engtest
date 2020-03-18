@@ -21,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
  */
 @RestController
 public class CompositeUserController {
-
     private final Logger LOGGER = LoggerFactory.getLogger(CompositeUserController.class);
 
     @Autowired

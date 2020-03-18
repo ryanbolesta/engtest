@@ -7,6 +7,8 @@ import fitpay.engtest.model.User;
 import fitpay.engtest.model.UserAsset;
 import fitpay.engtest.properties.FitPayAPIProperties;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +27,8 @@ import java.util.List;
  */
 @Service
 public class FitPayAPIService {
+    private final Logger LOGGER = LoggerFactory.getLogger(FitPayAPIService.class);
+
     private final String BODY = "body";
     private final String SLASH = "/";
     private final String COLON = ":";
@@ -63,6 +67,9 @@ public class FitPayAPIService {
      */
     <T extends UserAsset> List<T> getUserAssetList(Class<T[]> c, String url) throws JsonProcessingException, FitPayAPIException {
         String responseBody = makeGetRequest(url);
+
+        LOGGER.debug("Parsing FitPay API response for attribute={} from URL={} with response body={}", RESULTS, url,
+                responseBody);
         ObjectMapper mapper = new ObjectMapper();
         String results = mapper.readTree(responseBody).get(RESULTS).toString();
         return Arrays.asList(mapper.readValue(results, c));
@@ -81,6 +88,8 @@ public class FitPayAPIService {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(fitPayAPIAccessToken);
         HttpEntity<String> entity = new HttpEntity<>(BODY, headers);
+
+        LOGGER.debug("Making GET request to FitPay API for URL={}", url);
         ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
 
         if (response.getStatusCode().is2xxSuccessful()) {
@@ -118,9 +127,12 @@ public class FitPayAPIService {
         String tokenUrl = fitPayAPIProperties.getTokenUrl();
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
+        LOGGER.debug("Calling FitPay API to retrieve access token. tokenUrl={}", tokenUrl);
         ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.GET, entity, String.class);
 
         if (response.getStatusCode().is2xxSuccessful() && null != response.getBody()) {
+            LOGGER.debug("Successful retrieving access token, now parsing response for attribute={}. Response body={}",
+                    ACCESS_TOKEN, response.getBody());
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readTree(response.getBody()).path(ACCESS_TOKEN).asText();
         }

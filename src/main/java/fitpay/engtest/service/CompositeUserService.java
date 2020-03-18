@@ -8,6 +8,8 @@ import fitpay.engtest.model.Device;
 import fitpay.engtest.model.Link;
 import fitpay.engtest.model.User;
 import fitpay.engtest.model.UserAsset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class CompositeUserService {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(CompositeUserService.class);
 
     private final String DEVICES = "devices";
     private final String CREDIT_CARDS = "creditCards";
@@ -42,9 +46,12 @@ public class CompositeUserService {
     public CompositeUser getCompositeUser(String userId, String deviceFilter, String creditCardFilter)
             throws JsonProcessingException, ExecutionException, InterruptedException, FitPayAPIException {
         CompositeUser compositeUser = new CompositeUser();
+
+        LOGGER.debug("Retrieving individual user from FitPay API for user with id={}", userId);
         User user = fitPayAPIService.getUser(userId);
         Map<String, Link> links = user.getLinks();
 
+        LOGGER.debug("Retrieving devices and credit cards for user with id={}", userId);
         CompletableFuture<List<Device>> deviceListFuture = getDeviceListFuture(links, deviceFilter);
         CompletableFuture<List<CreditCard>> cardListFuture = getCreditCardListFuture(links, creditCardFilter);
 
@@ -52,6 +59,7 @@ public class CompositeUserService {
         compositeUser.setDevices(deviceListFuture.get());
         compositeUser.setCreditCards(cardListFuture.get());
 
+        LOGGER.debug("Successfully created Composite User object for user with id={}", userId);
         return compositeUser;
     }
 
@@ -67,6 +75,9 @@ public class CompositeUserService {
             throws JsonProcessingException, FitPayAPIException {
         String url = linkMap.get(DEVICES).getHref();
         List<Device> deviceList = fitPayAPIService.getUserAssetList(Device[].class, url);
+
+        LOGGER.debug("Successfully retrieved device list from fitpay API, now will filter list with filter={}",
+                deviceFilter);
         deviceList = filterResults(deviceList, deviceFilter);
         return CompletableFuture.completedFuture(deviceList);
     }
@@ -83,6 +94,9 @@ public class CompositeUserService {
             throws JsonProcessingException, FitPayAPIException {
         String url = linkMap.get(CREDIT_CARDS).getHref();
         List<CreditCard> creditCardList = fitPayAPIService.getUserAssetList(CreditCard[].class, url);
+
+        LOGGER.debug("Successfully retrieved credit card list from fitpay API, now will filter list with filter={}",
+                creditCardFilter);
         creditCardList = filterResults(creditCardList, creditCardFilter);
         return CompletableFuture.completedFuture(creditCardList);
     }

@@ -2,6 +2,7 @@ package fitpay.engtest.controller;
 
 import fitpay.engtest.model.CompositeUser;
 import fitpay.engtest.service.CompositeUserService;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
@@ -23,13 +24,13 @@ class TestUsersController {
     private MockMvc mockMvc;
 
     @MockBean
-    private CompositeUserService usersService;
+    private CompositeUserService compositeUserService;
 
     @Test
-    void shouldReturnUserWithNullAssets() throws Exception {
+    public void shouldReturnUserWithNullAssets() throws Exception {
         CompositeUser user = new CompositeUser();
         user.setUserId("123");
-        when(usersService.getCompositeUser("123", null, null)).thenReturn(user);
+        when(compositeUserService.getCompositeUser("123", null, null)).thenReturn(user);
         this.mockMvc.perform(get("/compositeUsers/123"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(content().json("{\"userId\":\"123\",\"devices\":null,\"creditCards\": null}"));

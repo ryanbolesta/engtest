@@ -1,6 +1,6 @@
 package fitpay.engtest;
 
-import fitpay.engtest.service.FitPayAPIService;
+import fitpay.engtest.config.AppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -12,7 +12,7 @@ public class SpringTestConfig {
 
     @Bean
     @Primary
-    public String fitPayAPIAccessToken(FitPayAPIService fitPayAPIService){
+    public String fitPayAPIAccessToken(){
         return "access token";
     }
 

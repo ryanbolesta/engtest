@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.eq;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = SpringTestConfig.class)
-public class FitPayAPIServiceTest {
+public class TestFitPayAPIService {
 
     @MockBean
     private RestTemplate fitPayRestTemplate;
@@ -41,7 +41,7 @@ public class FitPayAPIServiceTest {
      *  Tests getUser in FitPayAPIService by mocking RestTemplate to return the expected user
      */
     @Test
-    public void givenMockingIsDoneByMockito_whenGetUserIsCalled_shouldReturnMockedObject() throws FitPayAPIException {
+    public void whenGetUserIsCalled_shouldReturnMockedUser() throws FitPayAPIException {
         User expectedUser = new User();
         expectedUser.setId("123xyz");
         Mockito
@@ -57,7 +57,7 @@ public class FitPayAPIServiceTest {
      * holding an expected JSON response string.
      */
     @Test
-    public void givenMockingIsDoneByMockito_whenGetCreditCardsIsCalled_shouldReturnMockedObject() throws FitPayAPIException, IOException {
+    public void whenGetCreditCardsIsCalled_shouldReturnMockedList() throws FitPayAPIException, IOException {
         String url = "https://api.qa.fitpay.ninja/users/123xyz/creditCards";
         String jsonResponse = readFileToString("json/creditCardResponse.json");
         CreditCard expectedCard_1 = new CreditCard("789abc");
@@ -76,7 +76,7 @@ public class FitPayAPIServiceTest {
      * holding an expected JSON response string.
      */
     @Test
-    public void givenMockingIsDoneByMockito_whenGetDevicesIsCalled_shouldReturnMockedObject() throws FitPayAPIException, IOException {
+    public void whenGetDevicesIsCalled_shouldReturnMockedList() throws FitPayAPIException, IOException {
         String url = "https://api.qa.fitpay.ninja/users/123xyz/devices";
         String jsonResponse = readFileToString("json/devicesResponse.json");
         Device expectedDevice_1 = new Device("000");
@@ -90,6 +90,21 @@ public class FitPayAPIServiceTest {
         Assert.assertArrayEquals(expectedDevices.toArray(), deviceList.toArray());
     }
 
-    //TODO: Access token test
+    /**
+     * Tests getAccessToken in FitPayAPIService. Mocks RestTemplate to return a ResponseEntity
+     * holding an expected JSON response string.
+     */
+    @Test
+    public void whenGetTokenIsCalled_shouldReturnMockedToken() throws FitPayAPIException, IOException {
+        String url = "https://auth.qa.fitpay.ninja/oauth/token?grant_type=client_credentials";
+        String jsonResponse = readFileToString("json/tokenResponse.json");
+        String expectedToken = "token";
+        Mockito
+                .when(fitPayRestTemplate.exchange(eq(url), eq(HttpMethod.GET), any(), eq(String.class)))
+                .thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.OK));
+
+        String token = fitPayAPIService.getAccessToken();
+        Assert.assertEquals(expectedToken, token);
+    }
 
 }

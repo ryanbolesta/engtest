@@ -1,9 +1,10 @@
 package fitpay.engtest.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class CompositeUser {
+public class CompositeUser implements Serializable {
     private String userId;
     private List<Device> devices;
     private List<CreditCard> creditCards;

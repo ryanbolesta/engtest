@@ -1,0 +1,15 @@
+{
+    "userId": "123xyz",
+    "devices": [
+        {
+            "state": "INITIALIZED",
+            "deviceIdentifier": "123"
+        }
+    ],
+    "creditCards": [
+        {
+            "state": "INITIALIZED",
+            "creditCardId": "789"
+        }
+    ]
+}

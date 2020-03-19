@@ -1,21 +1,18 @@
 package fitpay.engtest.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Objects;
 
+@NoArgsConstructor
+@Getter
+@Setter
 public class CreditCard extends UserAsset {
     private String creditCardId;
 
-    public CreditCard() { }
-
     public CreditCard(String creditCardId) {
-        this.creditCardId = creditCardId;
-    }
-
-    public String getCreditCardId() {
-        return creditCardId;
-    }
-
-    public void setCreditCardId(String creditCardId) {
         this.creditCardId = creditCardId;
     }
 

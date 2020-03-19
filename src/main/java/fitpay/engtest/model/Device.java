@@ -1,21 +1,18 @@
 package fitpay.engtest.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Objects;
 
+@NoArgsConstructor
+@Getter
+@Setter
 public class Device extends UserAsset {
     private String deviceIdentifier;
 
-    public Device() {}
-
     public Device(String deviceIdentifier) {
-        this.deviceIdentifier = deviceIdentifier;
-    }
-
-    public String getDeviceIdentifier() {
-        return deviceIdentifier;
-    }
-
-    public void setDeviceIdentifier(String deviceIdentifier) {
         this.deviceIdentifier = deviceIdentifier;
     }
 

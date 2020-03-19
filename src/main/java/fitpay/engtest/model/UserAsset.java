@@ -1,22 +1,14 @@
 package fitpay.engtest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Abstract class for user assets. A user asset is considered an attribute of a
  * user with a 'state' attribute, such as credit cards and devices
  */
-@JsonIgnoreProperties(ignoreUnknown=true)
-public abstract class UserAsset implements Serializable {
+@Getter
+@Setter
+public abstract class UserAsset extends AbstractBaseModel {
     private String state;
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
 }

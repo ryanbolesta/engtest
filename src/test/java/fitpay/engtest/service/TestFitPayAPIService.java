@@ -4,6 +4,7 @@ import fitpay.engtest.SpringTestConfig;
 import fitpay.engtest.exception.FitPayAPIException;
 import fitpay.engtest.model.CreditCard;
 import fitpay.engtest.model.Device;
+import fitpay.engtest.model.Token;
 import fitpay.engtest.model.User;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class TestFitPayAPIService {
     @Test
     public void whenGetUserIsCalled_shouldReturnMockedUser() throws FitPayAPIException {
         User expectedUser = new User();
-        expectedUser.setId("123xyz");
+        expectedUser.setUserId("123xyz");
         Mockito
                 .when(fitPayRestTemplate.exchange(eq("https://api.qa.fitpay.ninja/users/123xyz"), eq(HttpMethod.GET), any(), eq(User.class)))
           .thenReturn(new ResponseEntity<>(expectedUser, HttpStatus.OK));
@@ -97,13 +98,12 @@ public class TestFitPayAPIService {
     @Test
     public void whenGetTokenIsCalled_shouldReturnMockedToken() throws FitPayAPIException, IOException {
         String url = "https://auth.qa.fitpay.ninja/oauth/token?grant_type=client_credentials";
-        String jsonResponse = readFileToString("json/tokenResponse.json");
-        String expectedToken = "token";
+        Token expectedToken = new Token("token");
         Mockito
-                .when(fitPayRestTemplate.exchange(eq(url), eq(HttpMethod.GET), any(), eq(String.class)))
-                .thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.OK));
+                .when(fitPayRestTemplate.exchange(eq(url), eq(HttpMethod.GET), any(), eq(Token.class)))
+                .thenReturn(new ResponseEntity<>(expectedToken, HttpStatus.OK));
 
-        String token = fitPayAPIService.getAccessToken();
+        Token token = fitPayAPIService.getAccessToken();
         Assert.assertEquals(expectedToken, token);
     }
 

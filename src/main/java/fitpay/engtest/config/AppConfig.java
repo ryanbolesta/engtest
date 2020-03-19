@@ -1,8 +1,8 @@
 package fitpay.engtest.config;
 
+import fitpay.engtest.model.Token;
 import fitpay.engtest.properties.FitPayAPIProperties;
 import fitpay.engtest.service.FitPayAPIService;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -39,7 +39,7 @@ public class AppConfig {
      * NOTE: There is not logic here to renew the token when it expires
      */
     @Bean
-    public String fitPayAPIAccessToken(FitPayAPIService fitPayAPIService) throws Exception {
+    public Token fitPayAPIAccessToken(FitPayAPIService fitPayAPIService) throws Exception {
         return fitPayAPIService.getAccessToken();
     }
 }

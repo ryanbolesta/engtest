@@ -45,7 +45,7 @@ public class TestCompositeUserService {
         map.put("devices", new Link("devicesLink.test"));
         map.put("creditCards", new Link("cardsLink.test"));
         user.setLinks(map);
-        user.setId("123xyz");
+        user.setUserId("123xyz");
         Mockito
                 .when(fitPayAPIService.getUser("123xyz"))
                 .thenReturn(user);

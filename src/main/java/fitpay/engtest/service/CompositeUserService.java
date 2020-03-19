@@ -53,7 +53,7 @@ public class CompositeUserService {
         LOGGER.debug("Retrieving devices and credit cards for user with id={}", userId);
         CompletableFuture<List<Device>> deviceListFuture = getDeviceListFuture(links, deviceFilter);
         CompletableFuture<List<CreditCard>> cardListFuture = getCreditCardListFuture(links, creditCardFilter);
-        compositeUser.setUserId(user.getId());
+        compositeUser.setUserId(user.getUserId());
         compositeUser.setDevices(deviceListFuture.get());
         compositeUser.setCreditCards(cardListFuture.get());
 
@@ -74,7 +74,7 @@ public class CompositeUserService {
         String url = linkMap.get(DEVICES).getHref();
         List<Device> deviceList = fitPayAPIService.getUserAssetList(Device[].class, url);
 
-        LOGGER.debug("Successfully retrieved device list from fitpay API, now will filter list with filter={}",
+        LOGGER.debug("Successfully retrieved device list from FitPay API, now will filter list with filter={}",
                 deviceFilter);
         deviceList = filterResults(deviceList, deviceFilter);
         return CompletableFuture.completedFuture(deviceList);
@@ -93,7 +93,7 @@ public class CompositeUserService {
         String url = linkMap.get(CREDIT_CARDS).getHref();
         List<CreditCard> creditCardList = fitPayAPIService.getUserAssetList(CreditCard[].class, url);
 
-        LOGGER.debug("Successfully retrieved credit card list from fitpay API, now will filter list with filter={}",
+        LOGGER.debug("Successfully retrieved credit card list from FitPay API, now will filter list with filter={}",
                 creditCardFilter);
         creditCardList = filterResults(creditCardList, creditCardFilter);
         return CompletableFuture.completedFuture(creditCardList);

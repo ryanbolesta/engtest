@@ -3,6 +3,7 @@ package fitpay.engtest.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fitpay.engtest.exception.FitPayAPIException;
+import fitpay.engtest.model.Token;
 import fitpay.engtest.model.User;
 import fitpay.engtest.model.UserAsset;
 import fitpay.engtest.properties.FitPayAPIProperties;
@@ -33,7 +34,6 @@ public class FitPayAPIService {
     private final String SLASH = "/";
     private final String COLON = ":";
     private final String RESULTS = "results";
-    private final String ACCESS_TOKEN = "access_token";
 
     @Autowired
     private FitPayAPIProperties fitPayAPIProperties;
@@ -42,7 +42,7 @@ public class FitPayAPIService {
     private RestTemplate restTemplate;
 
     @Autowired
-    private String fitPayAPIAccessToken;
+    private Token fitPayAPIAccessToken;
 
     /**
      * Retrieves a User from the FitPay API individual user endpoint for the given userId
@@ -86,7 +86,7 @@ public class FitPayAPIService {
     private <T> T makeGetRequest(String url, Class<T> responseType) throws FitPayAPIException {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.setBearerAuth(fitPayAPIAccessToken);
+        headers.setBearerAuth(fitPayAPIAccessToken.getAccessToken());
         HttpEntity<String> entity = new HttpEntity<>(BODY, headers);
 
         LOGGER.debug("Making GET request to FitPay API for URL={}", url);
@@ -115,7 +115,7 @@ public class FitPayAPIService {
      * @throws FitPayAPIException - Will occur if the response status is not in the expected 200 range
      * @throws JsonProcessingException - Will occur if the JSON response structure is unexpected and cannot be parsed
      */
-    public String getAccessToken() throws FitPayAPIException, JsonProcessingException {
+    public Token getAccessToken() throws FitPayAPIException, JsonProcessingException {
         String clientId = fitPayAPIProperties.getClientId();
         String secret = fitPayAPIProperties.getSecret();
         String credentials = clientId + COLON + secret;
@@ -128,13 +128,11 @@ public class FitPayAPIService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         LOGGER.debug("Calling FitPay API to retrieve access token. tokenUrl={}", tokenUrl);
-        ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.GET, entity, String.class);
+        ResponseEntity<Token> response = restTemplate.exchange(tokenUrl, HttpMethod.GET, entity, Token.class);
 
         if (response.getStatusCode().is2xxSuccessful() && null != response.getBody()) {
-            LOGGER.debug("Successful retrieving access token, now parsing response for attribute={}. Response body={}",
-                    ACCESS_TOKEN, response.getBody());
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readTree(response.getBody()).path(ACCESS_TOKEN).asText();
+            LOGGER.debug("Success retrieving access token value={}", response.getBody());
+            return response.getBody();
         }
 
         throw new FitPayAPIException("Unable to retrieve access token from FitPay API", response.getStatusCode());

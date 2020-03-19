@@ -1,0 +1,37 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://api.qa.fitpay.ninja/users/123xyz"
+    },
+    "eventStream.dynamic": {
+      "href": "https://api.qa.fitpay.ninja/users/123xyz/eventStream?{&events*}{&redirect}",
+      "templated": true
+    },
+    "creditCards": {
+      "href": "https://api.qa.fitpay.ninja/users/123xyz/creditCards"
+    },
+    "devices": {
+      "href": "https://api.qa.fitpay.ninja/users/123xyz/devices"
+    },
+    "paymentDevices": {
+      "href": "https://api.qa.fitpay.ninja/users/123xyz/devices?capabilities=SE_CONTACTLESS_PAYMENT"
+    },
+    "webapp.wallet": {
+      "href": "https://webapp.qa.fitpay.ninja/wallet?config={config}",
+      "templated": true
+    },
+    "webapp.addCard": {
+      "href": "https://webapp.qa.fitpay.ninja/wallet/add-card?config={config}",
+      "templated": true
+    }
+  },
+  "id": "123xyz",
+  "createdTs": "2020-03-09T19:42:34.067Z",
+  "createdTsEpoch": 1583782954067,
+  "lastModifiedTs": "2020-03-09T19:42:34.067Z",
+  "lastModifiedTsEpoch": 1583782954067,
+  "encryptedData": {
+    "encryptedDataSkipped": "encryptedData has been skipped, no fp-key-id specified"
+  },
+  "userId": "123xyz"
+}

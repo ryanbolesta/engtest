@@ -6,6 +6,7 @@ This project requires **JDK 1.8** or later. Run the project by executing the fol
 ```$xslt
 mvn spring-boot:run -Dspring-boot.run.arguments=--fitpay.api.secret=CLIENT_SECRET 
 ```
+> <sub> Note: The access token is retrieved automatically and does not need to be provided. However, it does not get renewed when expired. </sub>
 
 ##Testing the Endpoint
 
@@ -28,7 +29,6 @@ curl http://localhost:8080/compositeUsers/{userId}
 }
 ```
 
-> **Note**: The access token is retrieved automatically and does not need to be provided. However, it does not get renewed when expired 
 
 
 # Software Engineering API Integration Test

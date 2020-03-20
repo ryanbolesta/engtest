@@ -113,12 +113,9 @@ public class FitPayAPIService {
      * the BasicAuth header
      * @return The retrieved string access token
      * @throws FitPayAPIException - Will occur if the response status is not in the expected 200 range
-     * @throws JsonProcessingException - Will occur if the JSON response structure is unexpected and cannot be parsed
      */
-    public Token getAccessToken() throws FitPayAPIException, JsonProcessingException {
-        String clientId = fitPayAPIProperties.getClientId();
-        String secret = fitPayAPIProperties.getSecret();
-        String credentials = clientId + COLON + secret;
+    public Token getAccessToken() throws FitPayAPIException {
+        String credentials = fitPayAPIProperties.getClientId() + COLON + fitPayAPIProperties.getSecret();
         String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
 
         HttpHeaders headers = new HttpHeaders();

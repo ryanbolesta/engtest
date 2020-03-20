@@ -100,7 +100,7 @@ public class FitPayAPIService {
     }
 
     /**
-     * Overloaded for default case of a string response
+     * Overloaded for string response
      * @param url - url to connect to API
      * @return The string response body
      */
@@ -127,7 +127,7 @@ public class FitPayAPIService {
         LOGGER.debug("Calling FitPay API to retrieve access token. tokenUrl={}", tokenUrl);
         ResponseEntity<Token> response = restTemplate.exchange(tokenUrl, HttpMethod.GET, entity, Token.class);
 
-        if (response.getStatusCode().is2xxSuccessful() && null != response.getBody()) {
+        if (response.getStatusCode().is2xxSuccessful()) {
             LOGGER.debug("Success retrieving access token value={}", response.getBody());
             return response.getBody();
         }

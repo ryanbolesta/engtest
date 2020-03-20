@@ -1,3 +1,36 @@
+# Solution - Ryan Bolesta
+
+##How to Run
+
+This project requires **JDK 1.8** or later. Run the project by executing the following command. Replace `CLIENT_SECRET` with the actual client secret.
+```$xslt
+mvn spring-boot:run -Dspring-boot.run.arguments=--fitpay.api.secret=CLIENT_SECRET 
+```
+
+##Testing the Endpoint
+
+####Request
+```
+curl http://localhost:8080/compositeUsers/{userId}
+```
+
+####Example Response
+```json
+{
+    "userId": "123",
+    "devices": [
+        {
+            "state": "INITIALIZED",
+            "deviceIdentifier": "456"
+        }
+    ],
+    "creditCards": []
+}
+```
+
+> **Note**: The access token is retrieved automatically and does not need to be provided. However, it does not get renewed when expired 
+
+
 # Software Engineering API Integration Test
 
 ## Goal

@@ -18,6 +18,9 @@ import java.util.Map;
 import static fitpay.engtest.utility.ResourceReader.readFileToString;
 import static org.assertj.core.api.Assertions.*;
 
+/**
+* Tests for serializing and deseserializing JSON in the application
+**/
 @RunWith(SpringRunner.class)
 @AutoConfigureJsonTesters
 public class TestModelJson {

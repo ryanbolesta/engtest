@@ -1,0 +1,7 @@
+{
+  "access_token": "token",
+  "token_type": "bearer",
+  "expires_in": 43199,
+  "scope": "user.read user.write organizations.ENGTEST credentials.read devices.read users.read creditCards.read users.write",
+  "jti": "31044b6d-22bd-4f5e-b29a-c8f4dbfd5a45"
+}

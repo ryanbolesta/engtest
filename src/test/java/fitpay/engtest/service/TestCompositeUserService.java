@@ -39,7 +39,8 @@ public class TestCompositeUserService {
      *  Tests getUser in FitPayAPIService by mocking RestTemplate to return the expected user
      */
     @Test
-    public void whenGetCompositeUserIsCalled_shouldReturnMockedCompositeUser() throws FitPayAPIException, JsonProcessingException, ExecutionException, InterruptedException {
+    public void whenGetCompositeUserIsCalled_shouldReturnMockedCompositeUser()
+            throws FitPayAPIException, JsonProcessingException, ExecutionException, InterruptedException {
         User user = new User();
         Map<String, Link> map = new HashMap<>();
         map.put("devices", new Link("devicesLink.test"));
@@ -67,7 +68,8 @@ public class TestCompositeUserService {
                 .when(fitPayAPIService.getUserAssetList(CreditCard[].class, "cardsLink.test"))
                 .thenReturn(creditCards);
 
-        CompositeUser compositeUser = compositeUserService.getCompositeUser("123xyz", "ACTIVE", "ACTIVE");
+        CompositeUser compositeUser = compositeUserService
+                .getCompositeUser("123xyz", "ACTIVE", "ACTIVE");
 
         CompositeUser expectedUser = new CompositeUser();
         expectedUser.setUserId("123xyz");

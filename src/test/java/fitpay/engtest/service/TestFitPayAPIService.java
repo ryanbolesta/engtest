@@ -45,9 +45,9 @@ public class TestFitPayAPIService {
     public void whenGetUserIsCalled_shouldReturnMockedUser() throws FitPayAPIException {
         User expectedUser = new User();
         expectedUser.setUserId("123xyz");
-        Mockito
-                .when(fitPayRestTemplate.exchange(eq("https://api.qa.fitpay.ninja/users/123xyz"), eq(HttpMethod.GET), any(), eq(User.class)))
-          .thenReturn(new ResponseEntity<>(expectedUser, HttpStatus.OK));
+        Mockito.when(fitPayRestTemplate.exchange(eq("https://api.qa.fitpay.ninja/users/123xyz"),
+                        eq(HttpMethod.GET), any(), eq(User.class)))
+                .thenReturn(new ResponseEntity<>(expectedUser, HttpStatus.OK));
 
         User user = fitPayAPIService.getUser("123xyz");
         Assert.assertEquals(expectedUser, user);
@@ -64,8 +64,7 @@ public class TestFitPayAPIService {
         CreditCard expectedCard_1 = new CreditCard("789abc");
         CreditCard expectedCard_2 = new CreditCard("555aaa");
         List<CreditCard> expectedCreditCards = List.of(expectedCard_1, expectedCard_2);
-        Mockito
-                .when(fitPayRestTemplate.exchange(eq(url), eq(HttpMethod.GET), any(), eq(String.class)))
+        Mockito.when(fitPayRestTemplate.exchange(eq(url), eq(HttpMethod.GET), any(), eq(String.class)))
                 .thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.OK));
 
         List<CreditCard> creditCardList = fitPayAPIService.getUserAssetList(CreditCard[].class, url);
@@ -83,8 +82,7 @@ public class TestFitPayAPIService {
         Device expectedDevice_1 = new Device("000");
         Device expectedDevice_2 = new Device("111");
         List<Device> expectedDevices = List.of(expectedDevice_1, expectedDevice_2);
-        Mockito
-                .when(fitPayRestTemplate.exchange(eq(url), eq(HttpMethod.GET), any(), eq(String.class)))
+        Mockito.when(fitPayRestTemplate.exchange(eq(url), eq(HttpMethod.GET), any(), eq(String.class)))
                 .thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.OK));
 
         List<Device> deviceList = fitPayAPIService.getUserAssetList(Device[].class, url);
@@ -99,8 +97,7 @@ public class TestFitPayAPIService {
     public void whenGetTokenIsCalled_shouldReturnMockedToken() throws FitPayAPIException, IOException {
         String url = "https://auth.qa.fitpay.ninja/oauth/token?grant_type=client_credentials";
         Token expectedToken = new Token("token");
-        Mockito
-                .when(fitPayRestTemplate.exchange(eq(url), eq(HttpMethod.GET), any(), eq(Token.class)))
+        Mockito.when(fitPayRestTemplate.exchange(eq(url), eq(HttpMethod.GET), any(), eq(Token.class)))
                 .thenReturn(new ResponseEntity<>(expectedToken, HttpStatus.OK));
 
         Token token = fitPayAPIService.getAccessToken();

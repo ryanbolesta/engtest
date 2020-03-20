@@ -30,4 +30,3 @@ public class AppControllerAdvice extends ResponseEntityExceptionHandler {
     public void asyncError() { }
 
 }
-

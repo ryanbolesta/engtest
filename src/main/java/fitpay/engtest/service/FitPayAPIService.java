@@ -30,7 +30,6 @@ import java.util.List;
 public class FitPayAPIService {
     private final Logger LOGGER = LoggerFactory.getLogger(FitPayAPIService.class);
 
-    private final String BODY = "body";
     private final String SLASH = "/";
     private final String COLON = ":";
     private final String RESULTS = "results";
@@ -87,10 +86,9 @@ public class FitPayAPIService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(fitPayAPIAccessToken.getAccessToken());
-        HttpEntity<String> entity = new HttpEntity<>(BODY, headers);
 
         LOGGER.debug("Making GET request to FitPay API for URL={}", url);
-        ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+        ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), responseType);
 
         if (response.getStatusCode().is2xxSuccessful()) {
             return response.getBody();

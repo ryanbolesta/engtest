@@ -1,6 +1,6 @@
 # Solution - Ryan Bolesta
 
-##How to Run
+## How to Run
 
 This project requires **JDK 1.8** or later. Run the project by executing the following command. Replace `CLIENT_SECRET` with the actual client secret.
 ```$xslt
@@ -8,14 +8,14 @@ mvn spring-boot:run -Dspring-boot.run.arguments=--fitpay.api.secret=CLIENT_SECRE
 ```
 > <sub> Note: The access token is retrieved automatically and does not need to be provided. However, it does not get renewed when expired. </sub>
 
-##Testing the Endpoint
+## Testing the Endpoint
 
-####Request
+#### Request
 ```
 curl http://localhost:8080/compositeUsers/{userId}
 ```
 
-####Example Response
+#### Example Response
 ```json
 {
     "userId": "123",
